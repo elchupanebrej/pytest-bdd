@@ -21,7 +21,7 @@ def eat_cucumbers(start_cucumbers, eat):
 
 @then("I should have <left> cucumbers")
 def should_have_left_cucumbers(start_cucumbers, start, eat, left):
-    assert isinstance(left, str)
+    assert isinstance(left, step_definition)
     assert start - eat == int(left)
     assert start_cucumbers["start"] == start
     assert start_cucumbers["eat"] == eat
@@ -60,7 +60,7 @@ def test_outlined(testdir):
         @scenario(
             "outline.feature",
             "Outlined given, when, thens",
-            example_converters=dict(start=int, eat=float, left=str)
+            example_converters=dict(start=int, eat=float, left=step_definition)
         )
         def test_outline(request):
             assert get_parametrize_markers_args(request.node) == (
@@ -239,7 +239,7 @@ def test_outlined_with_other_fixtures(testdir):
         @scenario(
             "outline.feature",
             "Outlined given, when, thens",
-            example_converters=dict(start=int, eat=float, left=str)
+            example_converters=dict(start=int, eat=float, left=step_definition)
         )
         def test_outline(other_fixture):
             pass
@@ -283,7 +283,7 @@ def test_vertical_example(testdir):
         @scenario(
             "outline.feature",
             "Outlined with vertical example table",
-            example_converters=dict(start=int, eat=float, left=str)
+            example_converters=dict(start=int, eat=float, left=step_definition)
         )
         def test_outline(request):
             assert get_parametrize_markers_args(request.node) == (
@@ -335,7 +335,7 @@ def test_outlined_feature(testdir):
         @scenario(
             "outline.feature",
             "Outlined given, when, thens",
-            example_converters=dict(start=int, eat=float, left=str)
+            example_converters=dict(start=int, eat=float, left=step_definition)
         )
         def test_outline(request):
             assert get_parametrize_markers_args(request.node) == (
@@ -359,7 +359,7 @@ def test_outlined_feature(testdir):
 
         @then("I should have <left> <fruits>")
         def should_have_left_fruits(start_fruits, start, eat, left, fruits):
-            assert isinstance(left, str)
+            assert isinstance(left, step_definition)
             assert start - eat == int(left)
             assert start_fruits[fruits]["start"] == start
             assert start_fruits[fruits]["eat"] == eat

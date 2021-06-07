@@ -1,0 +1,82 @@
+---
+Feature:
+  Name: Feature with empty backgrounds
+  Backgrounds:
+    - Rule:
+        Name: Feature with single scenario with other steps
+        Scenarios:
+          - Scenario:
+              Name: Single Scenario
+              Steps:
+                - Given: I'm keyworded step
+                - Not keyworded step
+                - Given:
+                    Step: Another step
+                    DataTables:
+                      - Table:
+                          Name: Named table with default content type (csv)
+                          Content: >
+                            first, second, third
+                                1,      2,     3
+                                4,      5,     6
+                - Cool <paramerized> step
+                - Another step with <first_param>, <second_param>
+    - Rule:
+        Name: Feature with single scenario with other steps
+        Scenarios:
+          - Scenario:
+              Name: Single Scenario
+              Steps:
+                - Given: I'm keyworded step
+                - Not keyworded step
+                - Given:
+                    Step: Another step
+                    DataTables:
+                      - Table:
+                          Name: Named table with default content type (csv)
+                          Content: >
+                            first, second, third
+                                1,      2,     3
+                                4,      5,     6
+                - Cool <paramerized> step
+                - Another step with <first_param>, <second_param>
+  Scenarios:
+    - Rule:
+        Name: Rule with single scenario with some steps
+        Scenarios:
+          - Scenario:
+              Name: Single Scenario
+              Steps:
+                - Given: I'm keyworded step
+                - Not keyworded step
+                - Given:
+                    Step: Another step
+                    DataTables:
+                      - Table:
+                          Name: Named table with default content type (csv)
+                          Content: >
+                            first, second, third
+                                1,      2,     3
+                                4,      5,     6
+                - Cool <paramerized> step
+                - Another step with <first_param>, <second_param>
+    - Rule:
+        Name: Feature with single scenario with other steps
+        Scenarios:
+          - Scenario:
+              Name: Single Scenario
+              Steps:
+                - Given: I'm keyworded step
+                - Not keyworded step
+                - Given:
+                    Step: Another step
+                    DataTables:
+                      - Table:
+                          Name: Named table with default content type (csv)
+                          Content: >
+                            first, second, third
+                                1,      2,     3
+                                4,      5,     6
+                - Cool <paramerized> step
+                - Another step with <first_param>, <second_param>
+...

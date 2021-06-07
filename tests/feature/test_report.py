@@ -90,12 +90,12 @@ def test_step_trace(testdir):
 
         @then('I should have <left> cucumbers')
         def should_have_left_cucumbers(start_cucumbers, start, eat, left):
-            assert isinstance(left, str)
+            assert isinstance(left, step_definition)
             assert start - eat == int(left)
             assert start_cucumbers['start'] == start
             assert start_cucumbers['eat'] == eat
 
-        scenarios('test.feature', example_converters=dict(start=int, eat=float, left=str))
+        scenarios('test.feature', example_converters=dict(start=int, eat=float, left=step_definition))
     """
         )
     )

@@ -61,7 +61,7 @@ def test_step_trace(testdir):
 
             Examples: example1
             | type    | value  |
-            | str     | hello  |
+            | step_definition     | hello  |
             | int     | 42     |
             | float   | 1.0    |
     """
@@ -174,7 +174,7 @@ def test_step_trace(testdir):
                     ],
                     "line": 15,
                     "type": "scenario",
-                    "id": "test_passing_outline[str-hello]",
+                    "id": "test_passing_outline[step_definition-hello]",
                     "name": "Passing outline",
                 },
                 {
@@ -252,7 +252,7 @@ def test_step_trace_with_expand_option(testdir):
 
             Examples: example1
             | type    | value  |
-            | str     | hello  |
+            | step_definition     | hello  |
             | int     | 42     |
             | float   | 1.0    |
     """
@@ -277,7 +277,7 @@ def test_step_trace_with_expand_option(testdir):
     result, jsonobject = runandparse(testdir, "--cucumber-json-expanded")
     result.assert_outcomes(passed=3)
 
-    assert jsonobject[0]["elements"][0]["steps"][0]["name"] == "type str and value hello"
+    assert jsonobject[0]["elements"][0]["steps"][0]["name"] == "type step_definition and value hello"
     assert jsonobject[0]["elements"][1]["steps"][0]["name"] == "type int and value 42"
     assert jsonobject[0]["elements"][2]["steps"][0]["name"] == "type float and value 1.0"
 
@@ -311,7 +311,7 @@ def test_converters_dict_with_expand_option(testdir):
         @scenario(
             'test.feature',
             'Passing outline',
-            example_converters={"intvalue":int, "stringvalue":str, "floatvalue":float},
+            example_converters={"intvalue":int, "stringvalue":step_definition, "floatvalue":float},
         )
         def test_passing_outline():
             pass

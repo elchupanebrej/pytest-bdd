@@ -1,0 +1,72 @@
+---
+Feature:
+  Name: Feature with empty scenarios
+  Scenarios: []
+...
+---
+Feature:
+  Name: Feature with single scenario with no steps
+  Scenarios:
+    - Scenario:
+        Name: Single Scenario
+        Steps:
+          - Given: I'm keyworded step
+          - Not keyworded step
+          - Given:
+              Step: Another step
+              DataTables:
+                - Table:
+                    Name: Named table with default content type (csv)
+                    Content: >
+                      first, second, third
+                          1,      2,     3
+                          4,      5,     6
+          - Cool <paramerized> step
+          - Another step with <first_param>, <second_param>
+...
+---
+Feature:
+  Name: Feature with multiple scenarios
+  Scenarios:
+    - Scenario:
+        Name: Single Scenario
+        Steps:
+          - Given: I'm keyworded step
+          - Not keyworded step
+          - Another step
+          - Cool <paramerized> step
+          - Another step with <first_param>, <second_param>
+    - Scenario:
+        Name: Another Scenario
+        Steps:
+          - When: When keyworded step
+          - Then: Then keyworded step
+          - And: And keyworded step
+          - But: But keyworded step
+          - Another: Some not defined keyword step
+...
+---
+Feature:
+  Name: Feature with rule
+  Scenarios:
+    Rule:
+      Name: Rule Name
+      Description: Rule description
+      Scenarios:
+        - Scenario:
+              Name: Single Scenario
+              Steps:
+                - Given: I'm keyworded step
+                - Not keyworded step
+                - Another step
+                - Cool <paramerized> step
+                - Another step with <first_param>, <second_param>
+          - Scenario:
+              Name: Another Scenario
+              Steps:
+                - When: When keyworded step
+                - Then: Then keyworded step
+                - And: And keyworded step
+                - But: But keyworded step
+                - Another: Some not defined keyword step
+...

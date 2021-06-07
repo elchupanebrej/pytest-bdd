@@ -1,0 +1,7 @@
+---
+Feature:
+  Name: Tagged Feature
+  Tag:
+    - Cool tag
+    - Another cool tag
+...

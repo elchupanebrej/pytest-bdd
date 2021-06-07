@@ -1,0 +1,136 @@
+---
+Feature:
+  Name: Feature
+  Examples:
+    - Table:
+        Name: Named table with data represented as scv
+        Content: >
+          first, second, third
+              1,      2,     3
+              4,      5,     6
+        ContentType: text/csv
+        ContentMeta:
+          Delimiter: ','
+          DoubleQuote: yes
+          EscapeChar: ~
+          LineTerminator: "\r\n"
+          QuoteChar: '"'
+          SkipInitialSpace: yes
+          Strict: yes
+...
+---
+Feature:
+  Name: Feature
+  Examples:
+    - Table:
+        Name: Named table with default content type (csv)
+        Content: >
+          first, second, third
+              1,      2,     3
+              4,      5,     6
+...
+---
+Feature:
+  Name: Feature
+  Examples:
+    - Table:
+        Name: Named table with raw content split by rows
+        Content:
+          Headers:
+            - first
+            - second
+            - third
+          Rows:
+            - - 1
+              - 2
+              - 3
+            - - 4
+              - 5
+              - 6
+...
+---
+Feature:
+  Name: Feature
+  Examples:
+    - Table:
+        Name: Named table with raw content split by columns
+        Content:
+          Headers:
+            - first
+            - second
+            - third
+          Columns:
+            - - 1
+              - 4
+            - - 2
+              - 5
+            - - 3
+              - 6
+...
+---
+Feature:
+  Name: Feature
+  Examples:
+    - Table:
+        Name: Named table with content linked by URI
+        URI: http://example.com/example.csv
+        ContentType: text/csv
+...
+---
+Feature:
+  Name: Feature
+  Examples:
+    - Table:
+        Name: Named table with content linked by extended URI with RequestParams
+        URI:
+          Path: http://example.com/example.csv
+          RequestParms: {}
+        ContentType: text/csv
+...
+---
+Feature:
+  Name: Feature
+  Examples:
+    - Table:
+        Name: Named table with content linked by extended URI without RequestParams
+        URI:
+          Path: http://example.com/example.csv
+          RequestParms: {}
+        ContentType: text/csv
+...
+---
+Feature:
+  Name: Empty Feature with unnamed example table
+  Examples:
+    - Table:
+        URI: http://example.com/example.csv
+        ContentType: text/csv
+...
+---
+Feature:
+  Name: Feature with Path loader
+  Examples:
+    - Table:
+        Path: simple_feature_example.csv
+        ContentType: text/csv
+...
+---
+Feature:
+  Name: Feature with Extended Path loader resolved by current working directory
+  Examples:
+    - Table:
+        Path:
+          Path: ./simple_feature_example.csv
+          Type: CWD
+        ContentType: text/csv
+...
+---
+Feature:
+  Name: Feature with Extended Path loader resolved by relative by feature Path
+  Examples:
+    - Table:
+        Path:
+          Path: ./simple_feature_example.csv
+          Type: FeatureRelative
+        ContentType: text/csv
+...

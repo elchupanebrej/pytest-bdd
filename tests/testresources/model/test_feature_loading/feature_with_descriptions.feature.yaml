@@ -1,0 +1,27 @@
+---
+Feature:
+  Name: Empty Feature
+  Description: My Cool Description
+...
+---
+Feature:
+  Name: Empty Feature
+  Description:
+    Content: >
+      Multistring
+      content
+...
+---
+Feature:
+  Name: Empty Feature
+  Description:
+    Path: './resources/MyCoolDescription.txt'
+    ContentType: text/plain
+...
+---
+Feature:
+  Name: Empty Feature
+  Description:
+    URI: http://example.com
+    ContentType: text/html
+...

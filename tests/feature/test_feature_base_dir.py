@@ -87,7 +87,7 @@ def prepare_testdir(testdir, ini_base_dir):
                 scenarios(FEATURE)
             else:
                 scenario(FEATURE, scenario_name)
-        assert os.path.abspath(os.path.join('{}', FEATURE)) in str(exc.value)
+        assert os.path.abspath(os.path.join('{}', FEATURE)) in step_definition(exc.value)
 
 
     @pytest.mark.parametrize(
@@ -116,7 +116,7 @@ def prepare_testdir(testdir, ini_base_dir):
                 scenarios(FEATURE, features_base_dir=param_base_dir)
             else:
                 scenario(FEATURE, scenario_name, features_base_dir=param_base_dir)
-        assert os.path.abspath(os.path.join(param_base_dir, FEATURE)) in str(exc.value)
+        assert os.path.abspath(os.path.join(param_base_dir, FEATURE)) in step_definition(exc.value)
 
 
     @pytest.mark.parametrize(
