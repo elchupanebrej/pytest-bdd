@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from yaml import FullLoader, load_all
 
-from pytest_bdd.model.builder import GherkinYamlModelBuilder, KeywordData
+from pytest_bdd.model.feature.builder import GherkinYamlModelBuilder, KeywordData
 
 
 def test_empty_features_loading(resource_path: Path):

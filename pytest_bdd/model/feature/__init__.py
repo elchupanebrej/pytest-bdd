@@ -1,5 +1,9 @@
+from operator import attrgetter
+from typing import List, Optional
+
 from attr import attrs, attrib, Factory
-from typing import List, Any, Optional
+
+from pytest_bdd.model.common import DataColumn
 
 
 @attrs
@@ -22,29 +26,22 @@ class Tagable:
 
 
 @attrs
-class Feature(FeatureNode, Tagable):
+class CompositeScenario(FeatureNode, Tagable):
     scenarios = attrib(default=Factory(list), kw_only=True)  # type: List[Scenario]
-    rules = attrib(default=Factory(list), kw_only=True)  # type: List[Rule]
-    backgrounds = attrib(default=Factory(list), kw_only=True)  # type: List[Background]
+    backgrounds = attrib(default=Factory(list), kw_only=True)  # type: List[Scenario]
     examples = attrib(default=Factory(list), kw_only=True)  # type: List[ExampleTable]
+
+
+class Feature(CompositeScenario):
+    pass
+
+
+class Rule(CompositeScenario):
+    pass
 
 
 @attrs
 class Scenario(FeatureNode, Tagable):
-    examples = attrib(default=Factory(list), kw_only=True)  # type: List[ExampleTable]
-    steps = attrib(default=Factory(list), kw_only=True)  # type: List[Step]
-
-
-@attrs
-class Rule(FeatureNode, Tagable):
-    backgrounds = attrib(default=Factory(list), kw_only=True)  # type: List[Background]
-    scenarios = attrib(default=Factory(list), kw_only=True)  # type: List[Scenario]
-    examples = attrib(default=Factory(list), kw_only=True)  # type: List[ExampleTable]
-    rules = attrib(default=Factory(list), kw_only=True)  # type: List[Rule]
-
-
-@attrs
-class Background(FeatureNode, Tagable):
     examples = attrib(default=Factory(list), kw_only=True)  # type: List[ExampleTable]
     steps = attrib(default=Factory(list), kw_only=True)  # type: List[Step]
 
@@ -55,13 +52,13 @@ class Step(FeatureNode):
     datatables = attrib(default=Factory(list), kw_only=True)  # type: List[DataTable]
 
 
-@attrs
+@attrs(frozen=True)
 class StepParameter:
     name = attrib(default=Factory(list), kw_only=True)  # type: str
 
 
 @attrs
-class ExampleTable(FeatureNode):
+class ExampleTable(FeatureNode, Tagable):
     datatable = attrib(default=Factory(list), kw_only=True)  # type: DataTable
 
 
@@ -69,16 +66,9 @@ class ExampleTable(FeatureNode):
 class DataTable:
     columns = attrib(default=Factory(list), kw_only=True)  # type: List[DataColumn]
 
-
-@attrs
-class DataColumn:
-    name = attrib(default=Factory(list), kw_only=True)  # type: DataCell
-    data = attrib(default=Factory(list), kw_only=True)  # type: List[DataCell]
-
-
-@attrs
-class DataCell:
-    value = attrib(default=None, kw_only=True)  # type: List[Any]
+    @property
+    def columns_headers(self):
+        return list(map(attrgetter('header'), self.columns))
 
 
 @attrs

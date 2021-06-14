@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from pytest_bdd.model.builder import CSVParser
+from pytest_bdd.model.feature.builder import CSVParser
 from deepdiff import DeepDiff
 
 

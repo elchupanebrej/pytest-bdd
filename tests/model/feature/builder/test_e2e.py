@@ -2,7 +2,7 @@ from unittest.mock import patch, Mock
 
 from yaml import FullLoader, load_all
 
-from pytest_bdd.model.builder import GherkinYamlModelBuilder, KeywordData
+from pytest_bdd.model.feature.builder import GherkinYamlModelBuilder, KeywordData
 
 
 def test_e2e_parsing_feature_with_examples_1(resource_path):
@@ -24,8 +24,8 @@ def test_e2e_parsing_feature_with_examples_1(resource_path):
 
 
 def test_e2e_parsing_feature_with_rules(resource_path):
-    feature_file_yaml_path = (resource_path / '..' / '..' / '..' / 'feature_with_rules.feature.yaml')
-    feature_file_yaml_data = feature_file_yaml_path.read_text()
+    feature_file_yaml_path = (resource_path / '..' / '..' / 'feature_with_rules.feature.yaml')
+    feature_file_yaml_data = feature_file_yaml_path.resolve().read_text()
     feature_file_data = list(load_all(feature_file_yaml_data, Loader=FullLoader))
 
     gherkin_yaml_model = GherkinYamlModelBuilder(

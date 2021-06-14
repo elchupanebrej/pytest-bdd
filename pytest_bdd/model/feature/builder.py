@@ -9,9 +9,8 @@ from pathlib import Path
 from attr import attrib, attrs, Factory
 from requests import get
 
+from pytest_bdd.model.common import DataCell, DataColumn
 from pytest_bdd.model.feature import (
-    DataCell,
-    DataColumn,
     DataTable,
     ExampleTable,
     Feature,
@@ -84,7 +83,7 @@ class CompositeBuilder(Builder):
     Buildable = attrib(kw_only=True, default=None)  # type: type
 
     def build(self, data: KeywordData):
-        _, name = get_item_with_key_by_group(data.payload, [Keyword.FeatureNode.NAME])
+        _, name = get_item_with_key_by_group(data.payload, [Keyword.FeatureNode.NAME], default=None)
 
         # description_data = get_item_with_key_by_group(data.payload, Keyword.Description.all, default=None)
         # description = DescriptionBuilder(context=self.context).build(description_data)
@@ -213,7 +212,7 @@ class StepBuilder(Builder):
         parameters = StepParametersBuilder(context=self.context).build(
             KeywordData('StepParameterSource', step_name)
         )
-        return Step(keyword=keyword, parameters=parameters, datatables=data_tables)
+        return Step(keyword=keyword, name=step_name, parameters=parameters, datatables=data_tables)
 
 
 class StepParametersBuilder(Builder):
@@ -249,11 +248,11 @@ class ExamplesBuilder(Builder):
                 # TODO add logging here
                 continue
             else:
-                examples.append(ExampleBuilder(context=self.context).build(example_data))
-
-        built_examples = [*map(lambda value: ExampleTable(keyword=data.keyword, datatable=value), examples)]
-
-        return built_examples
+                datatable = ExampleBuilder(context=self.context).build(example_data)
+                tags_data = get_item_with_key_by_group(example_data.payload, Keyword.Tags.all, default=[])
+                tags = TagBuilder(context=self.context).build(tags_data)
+                examples.append(ExampleTable(keyword=data.keyword, datatable=datatable, tags=tags))
+        return examples
 
 
 class ExampleBuilder(Builder):
@@ -380,12 +379,12 @@ class DataTableBuilder(Builder):
 
 class DataColumnBuilder(Builder):
     def build(self, data: KeywordData) -> DataColumn:
-        name = DataCellBuilder(context=self.context).build(KeywordData('Value', data.payload['Header']))
+        header = DataCellBuilder(context=self.context).build(KeywordData('Value', data.payload['Header']))
         data = [*map(
             lambda value: DataCellBuilder(context=self.context).build(KeywordData('Value', value)),
             data.payload['ColumnData']
         )]
-        return DataColumn(name=name, data=data)
+        return DataColumn(header=header, data=data)
 
 
 class DataCellBuilder(Builder):

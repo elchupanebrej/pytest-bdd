@@ -1,0 +1,36 @@
+---
+Feature:
+  Name: Feature with single scenario and single step
+  Examples:
+    - Table:
+        Content: >
+          first_feature_parameter, second_feature_parameter
+                              111, 121 
+                              112, 122
+  Backgrounds:
+    - Scenario:
+        Name: Single Background Scenario
+        Steps:
+          - Given: Background step using <first_feature_parameter> and <second_feature_parameter>
+          - When: Background step using <first_background_parameter> and <second_background_parameter>
+          - Then: Background step using <first_scenario_parameter> and <second_scenario_parameter>
+        Examples:
+          - Table:
+              Content: >
+                first_background_parameter, second_background_parameter
+                                   211, 221
+                                   212, 222
+  Scenarios:
+    - Scenario:
+        Name: Single Scenario
+        Steps:
+          - Given: Scenario step using <first_feature_parameter> and <second_feature_parameter>
+          - When: Scenario step using <first_background_parameter> and <second_background_parameter>
+          - Then: Scenario step using <first_scenario_parameter> and <second_scenario_parameter>
+        Examples:
+          - Table:
+              Content: >
+                first_scenario_parameter, second_scenario_parameter
+                                 311, 321
+                                 312, 322
+...

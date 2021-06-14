@@ -1,0 +1,9 @@
+---
+Feature:
+  Name: Feature with single scenario and single parametrized step
+  Scenarios:
+    - Scenario:
+        Name: Parametrized scenario
+        Steps:
+          - Given: I'm keyworded <parameter> step
+...

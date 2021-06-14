@@ -1,0 +1,9 @@
+---
+Feature:
+  Name: Feature with single scenario and single step
+  Scenarios:
+    - Scenario:
+        Name: Single Scenario
+        Steps:
+          - Given: I'm keyworded step
+...

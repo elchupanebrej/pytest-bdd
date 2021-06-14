@@ -1,0 +1,150 @@
+---
+Feature:
+  Name: Feature with single scenario and single step
+  Tags:
+    - Feature tag
+  Examples:
+    - Table:
+        Tags:
+          - Feature example tag
+        Content: >
+          first_feature_parameter, second_feature_parameter
+                              111,                      121
+                              112,                      122
+  Backgrounds:
+    - Rule:
+        Tags:
+          - Background rule tag
+        Examples:
+          - Table:
+              Tags:
+                - Background rule example tag
+              Content: >
+                first_backgrounds_rule_examples_parameter, second_backgrounds_rule_examples_parameter
+                                                      211,                                        221
+                                                      212,                                        222
+        Backgrounds:
+          - Scenario:
+              Tags:
+                - Background rule background scenario tag
+              Name: Background Rule Background Scenario
+              Steps:
+                - Given: Background rule background step using <first_feature_parameter>
+                - Given: Background rule background step using <second_feature_parameter>
+                - Given: Background rule background step using <first_backgrounds_rule_examples_parameter>
+                - Given: Background rule background step using <second_backgrounds_rule_examples_parameter>
+                - Given: Background rule background step using <first_backgrounds_rule_background_scenario_parameter>
+                - Given: Background rule background step using <second_backgrounds_rule_background_scenario_parameter>
+                - Given: Background rule background step using <first_backgrounds_rule_scenario_parameter>
+                - Given: Background rule background step using <second_backgrounds_rule_scenario_parameter>
+                - Given: Background rule background step using <first_rule_examples_parameter>
+                - Given: Background rule background step using <second_rule_examples_parameter>
+                - Given: Background rule background step using <first_rule_background_scenario_parameter>
+                - Given: Background rule background step using <second_rule_background_scenario_parameter>
+                - Given: Background rule background step using <first_rule_scenario_parameter>
+                - Given: Background rule background step using <second_rule_scenario_parameter>
+              Examples:
+                - Table:
+                    Tags:
+                      - Background rule background scenario example tag
+                    Content: >
+                      first_backgrounds_rule_background_scenario_parameter, second_backgrounds_rule_background_scenario_parameter
+                                                                       311,                                                   321
+                                                                       312,                                                   322
+        Scenarios:
+          - Scenario:
+              Tags:
+                - Background rule scenario tag
+              Name: Background Rule Scenario
+              Steps:
+                - Given: Background rule scenario step using <first_feature_parameter>
+                - Given: Background rule scenario step using <second_feature_parameter>
+                - Given: Background rule scenario step using <first_backgrounds_rule_examples_parameter>
+                - Given: Background rule scenario step using <second_backgrounds_rule_examples_parameter>
+                - Given: Background rule scenario step using <first_backgrounds_rule_background_scenario_parameter>
+                - Given: Background rule scenario step using <second_backgrounds_rule_background_scenario_parameter>
+                - Given: Background rule scenario step using <first_backgrounds_rule_scenario_parameter>
+                - Given: Background rule scenario step using <second_backgrounds_rule_scenario_parameter>
+                - Given: Background rule scenario step using <first_rule_examples_parameter>
+                - Given: Background rule scenario step using <second_rule_examples_parameter>
+                - Given: Background rule scenario step using <first_rule_background_scenario_parameter>
+                - Given: Background rule scenario step using <second_rule_background_scenario_parameter>
+                - Given: Background rule scenario step using <first_rule_scenario_parameter>
+                - Given: Background rule scenario step using <second_rule_scenario_parameter>
+              Examples:
+                - Table:
+                    Tags:
+                      - Background rule scenario example tag
+                    Content: >
+                      first_backgrounds_rule_scenario_parameter, second_backgrounds_rule_scenario_parameter
+                                                            411,                                        421
+                                                            412,                                        422
+  Scenarios:
+    - Rule:
+        Tags:
+          - Rule scenario tag
+        Examples:
+          - Table:
+              Tags:
+                - Background rule scenario examples tag
+              Content: >
+                first_rule_examples_parameter, second_rule_examples_parameter
+                                          511,                            521
+                                          512,                            522
+        Backgrounds:
+          - Scenario:
+              Tags:
+                - Rule scenario background tag
+              Name: Single Background Scenario
+              Steps:
+                - Given: Rule background step using <first_feature_parameter>
+                - Given: Rule background step using <second_feature_parameter>
+                - Given: Rule background step using <first_backgrounds_rule_examples_parameter>
+                - Given: Rule background step using <second_backgrounds_rule_examples_parameter>
+                - Given: Rule background step using <first_backgrounds_rule_background_scenario_parameter>
+                - Given: Rule background step using <second_backgrounds_rule_background_scenario_parameter>
+                - Given: Rule background step using <first_backgrounds_rule_scenario_parameter>
+                - Given: Rule background step using <second_backgrounds_rule_scenario_parameter>
+                - Given: Rule background step using <first_rule_examples_parameter>
+                - Given: Rule background step using <second_rule_examples_parameter>
+                - Given: Rule background step using <first_rule_background_scenario_parameter>
+                - Given: Rule background step using <second_rule_background_scenario_parameter>
+                - Given: Rule background step using <first_rule_scenario_parameter>
+                - Given: Rule background step using <second_rule_scenario_parameter>
+              Examples:
+                - Table:
+                    Tags:
+                      - Rule scenario background examples tag
+                    Content: >
+                      first_rule_background_scenario_parameter, second_rule_background_scenario_parameter
+                                                           611,                                       621
+                                                           612,                                       622
+        Scenarios:
+          - Scenario:
+              Tags:
+                - Rule scenario tag
+              Name: Single Background Scenario
+              Steps:
+                - Given: Rule scenario step using <first_feature_parameter>
+                - Given: Rule scenario step using <second_feature_parameter>
+                - Given: Rule scenario step using <first_backgrounds_rule_examples_parameter>
+                - Given: Rule scenario step using <second_backgrounds_rule_examples_parameter>
+                - Given: Rule scenario step using <first_backgrounds_rule_background_scenario_parameter>
+                - Given: Rule scenario step using <second_backgrounds_rule_background_scenario_parameter>
+                - Given: Rule scenario step using <first_backgrounds_rule_scenario_parameter>
+                - Given: Rule scenario step using <second_backgrounds_rule_scenario_parameter>
+                - Given: Rule scenario step using <first_rule_examples_parameter>
+                - Given: Rule scenario step using <second_rule_examples_parameter>
+                - Given: Rule scenario step using <first_rule_background_scenario_parameter>
+                - Given: Rule scenario step using <second_rule_background_scenario_parameter>
+                - Given: Rule scenario step using <first_rule_scenario_parameter>
+                - Given: Rule scenario step using <second_rule_scenario_parameter>
+              Examples:
+                - Table:
+                    Tags:
+                      - Rule scenario examples tag
+                    Content: >
+                      first_rule_scenario_parameter, second_rule_scenario_parameter
+                                                711,                            721
+                                                712,                            722
+...
