@@ -68,7 +68,7 @@ class DataTable:
 
     @property
     def columns_headers(self):
-        return list(map(attrgetter('header'), self.columns))
+        return list(map(attrgetter("header"), self.columns))
 
 
 @attrs
@@ -144,4 +144,4 @@ class Tag:
     @name.validator
     def name_validator(self, attribute, value):
         if not isinstance(value, str):
-            raise ValueError('Tag name has to be string')
+            raise ValueError("Tag name has to be string")

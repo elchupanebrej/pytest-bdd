@@ -24,7 +24,7 @@ from pytest_bdd.model.feature import (
 from pytest_bdd.model.keyword import Keyword
 
 
-KeywordData = namedtuple('KeywordData', ['keyword', 'payload'])
+KeywordData = namedtuple("KeywordData", ["keyword", "payload"])
 
 
 @attrs
@@ -40,7 +40,7 @@ def getitemdefault(obj, key, **kwargs):
         return obj[key]
     except KeyError as e:
         try:
-            return kwargs['default']
+            return kwargs["default"]
         except KeyError:
             raise e
 
@@ -52,9 +52,9 @@ def get_item_with_key_by_group(obj, key_group, **kwargs) -> KeywordData:
         except KeyError:
             continue
     try:
-        return KeywordData(None, kwargs['default'])
+        return KeywordData(None, kwargs["default"])
     except KeyError:
-        raise KeyError(f'Keys from key_group {key_group} are not present in object from {obj}')
+        raise KeyError(f"Keys from key_group {key_group} are not present in object from {obj}")
 
 
 class Singleton(type):
@@ -69,12 +69,14 @@ class Singleton(type):
 class GherkinYamlModelBuilder(Builder):
     def build(self, data: KeywordData):
         gherkin_yaml_raw_data = data.payload
-        features = [*map(
-            lambda value: FeatureBuilder(context=self.context).build(get_item_with_key_by_group(
-                value,
-                Keyword.Feature.all
-            )),
-            gherkin_yaml_raw_data)]
+        features = [
+            *map(
+                lambda value: FeatureBuilder(context=self.context).build(
+                    get_item_with_key_by_group(value if value is not None else {}, Keyword.Feature.all, default={})
+                ),
+                gherkin_yaml_raw_data,
+            )
+        ]
         return GherkinYamlModel(features=features)
 
 
@@ -203,15 +205,13 @@ class StepBuilder(Builder):
                 step_name = step_data
                 data_tables = []
             else:
-                step_name = step_data['Step']
+                step_name = step_data["Step"]
                 data_tables_data = get_item_with_key_by_group(step_data, [Keyword.Examples.DATA_TABLES], default=[])
                 data_tables = ExamplesBuilder(context=self.context).build(data_tables_data)
         else:
             # TODO
             raise RuntimeError
-        parameters = StepParametersBuilder(context=self.context).build(
-            KeywordData('StepParameterSource', step_name)
-        )
+        parameters = StepParametersBuilder(context=self.context).build(KeywordData("StepParameterSource", step_name))
         return Step(keyword=keyword, name=step_name, parameters=parameters, datatables=data_tables)
 
 
@@ -223,8 +223,7 @@ class StepParametersBuilder(Builder):
     def build(self, data):
         return [
             StepParameter(name=parameter_name)
-            for parameter_name
-            in self.get_step_param_names_from_definition(data.payload)
+            for parameter_name in self.get_step_param_names_from_definition(data.payload)
         ]
 
     STEP_PARAM_RE = re.compile(r"<(.+?)>")
@@ -234,7 +233,7 @@ class StepsBuilder(Builder):
     def build(self, data: KeywordData):
         steps = []
         for step_data in data.payload:
-            steps.append(StepBuilder(context=self.context).build(KeywordData('Step', step_data)))
+            steps.append(StepBuilder(context=self.context).build(KeywordData("Step", step_data)))
         return steps
 
 
@@ -284,10 +283,10 @@ class ExampleBuilder(Builder):
 
 class CSVParser:
     class Default:
-        delimiter = ','
+        delimiter = ","
         doublequote = True
         escapechar = None
-        lineterminator = '\r\n'
+        lineterminator = "\r\n"
         quotechar = '"'
         skipinitialspace = True
         strict = True
@@ -298,52 +297,52 @@ class CSVParser:
             data_meta = {}
         file_like_data = StringIO(data)
 
-        delimiter = getitemdefault(data_meta, 'Delimiter', default=cls.Default.delimiter)
-        doublequote = getitemdefault(data_meta, 'Doublequote', default=cls.Default.doublequote)
-        escapechar = getitemdefault(data_meta, 'EscapeChar', default=cls.Default.escapechar)
-        lineterminator = getitemdefault(data_meta, 'LineTerminator', default=cls.Default.lineterminator)
-        quotechar = getitemdefault(data_meta, 'QuoteChar', default=cls.Default.quotechar)
-        skipinitialspace = getitemdefault(data_meta, 'SkipInitialSpace', default=cls.Default.skipinitialspace)
-        strict = getitemdefault(data_meta, 'Strict', default=cls.Default.strict)
+        delimiter = getitemdefault(data_meta, "Delimiter", default=cls.Default.delimiter)
+        doublequote = getitemdefault(data_meta, "Doublequote", default=cls.Default.doublequote)
+        escapechar = getitemdefault(data_meta, "EscapeChar", default=cls.Default.escapechar)
+        lineterminator = getitemdefault(data_meta, "LineTerminator", default=cls.Default.lineterminator)
+        quotechar = getitemdefault(data_meta, "QuoteChar", default=cls.Default.quotechar)
+        skipinitialspace = getitemdefault(data_meta, "SkipInitialSpace", default=cls.Default.skipinitialspace)
+        strict = getitemdefault(data_meta, "Strict", default=cls.Default.strict)
 
-        parsed_data = iter(csv.reader(
-            file_like_data,
-            delimiter=delimiter,
-            doublequote=doublequote,
-            escapechar=escapechar,
-            lineterminator=lineterminator,
-            quotechar=quotechar,
-            skipinitialspace=skipinitialspace,
-            strict=strict,
-        ))
+        parsed_data = iter(
+            csv.reader(
+                file_like_data,
+                delimiter=delimiter,
+                doublequote=doublequote,
+                escapechar=escapechar,
+                lineterminator=lineterminator,
+                quotechar=quotechar,
+                skipinitialspace=skipinitialspace,
+                strict=strict,
+            )
+        )
 
         headers = next(parsed_data)
         rows = [*parsed_data]
-        return {'headers': headers, 'rows': rows}
+        return {"headers": headers, "rows": rows}
 
 
 @attrs
 class ParsersRegistry(metaclass=Singleton):
-    parser_by_content_type = attrib(default={
-        'text/csv': CSVParser
-    })
+    parser_by_content_type = attrib(default={"text/csv": CSVParser})
 
 
 class RawEmbeddedExampleBuilder(Builder):
     def build(self, data: KeywordData):
 
-        content = data.payload['Content']
+        content = data.payload["Content"]
         try:
-            _, headers = get_item_with_key_by_group(content, ['Headers'])
+            _, headers = get_item_with_key_by_group(content, ["Headers"])
         except KeyError:
             # TODO Maybe raise some Error here
             return None
 
         try:
-            _, rows_data = get_item_with_key_by_group(content, ['Rows'])
+            _, rows_data = get_item_with_key_by_group(content, ["Rows"])
         except KeyError:
             try:
-                _, columns_data = get_item_with_key_by_group(content, ['Columns'])
+                _, columns_data = get_item_with_key_by_group(content, ["Columns"])
             except KeyError:
                 # TODO Maybe raise some Error here
                 return None
@@ -356,22 +355,17 @@ class RawEmbeddedExampleBuilder(Builder):
         columns = list(zip(*rows))
 
         return DataTableBuilder(context=self.context).build(
-            KeywordData(Keyword.Examples.Table.TABLE,
-                        {'Headers': filled_headers,
-                         'Columns': columns})
+            KeywordData(Keyword.Examples.Table.TABLE, {"Headers": filled_headers, "Columns": columns})
         )
 
 
 class DataTableBuilder(Builder):
     def build(self, data: KeywordData):
         columns = []
-        for header, column in zip(*itemgetter('Headers', 'Columns')(data.payload)):
+        for header, column in zip(*itemgetter("Headers", "Columns")(data.payload)):
             columns.append(
                 DataColumnBuilder(context=self.context).build(
-                    KeywordData('Column', {
-                        'Header': header,
-                        'ColumnData': column
-                    })
+                    KeywordData("Column", {"Header": header, "ColumnData": column})
                 )
             )
         return DataTable(columns=columns)
@@ -379,11 +373,13 @@ class DataTableBuilder(Builder):
 
 class DataColumnBuilder(Builder):
     def build(self, data: KeywordData) -> DataColumn:
-        header = DataCellBuilder(context=self.context).build(KeywordData('Value', data.payload['Header']))
-        data = [*map(
-            lambda value: DataCellBuilder(context=self.context).build(KeywordData('Value', value)),
-            data.payload['ColumnData']
-        )]
+        header = DataCellBuilder(context=self.context).build(KeywordData("Value", data.payload["Header"]))
+        data = [
+            *map(
+                lambda value: DataCellBuilder(context=self.context).build(KeywordData("Value", value)),
+                data.payload["ColumnData"],
+            )
+        ]
         return DataColumn(header=header, data=data)
 
 
@@ -393,68 +389,61 @@ class DataCellBuilder(Builder):
 
 
 class EmbeddedExampleBuilder(Builder):
-    DEFAULT_CONTENT_TYPE = 'text/csv'
+    DEFAULT_CONTENT_TYPE = "text/csv"
 
     def build(self, data: KeywordData):
         try:
-            content_type = data.payload['ContentType']
+            content_type = data.payload["ContentType"]
         except KeyError:
             content_type = self.DEFAULT_CONTENT_TYPE
 
         try:
-            content_meta = data.payload['ContentMeta']
+            content_meta = data.payload["ContentMeta"]
         except KeyError:
             content_meta = {}
 
         _, parsable_data = get_item_with_key_by_group(data.payload, Keyword.Examples.Loader.Embeded.all)
 
-        parsed_data = (
-            ParsersRegistry()
-                .parser_by_content_type[content_type]
-                .parse(parsable_data, content_meta)
-        )
+        parsed_data = ParsersRegistry().parser_by_content_type[content_type].parse(parsable_data, content_meta)
 
         raw_example_builder_payload = {
-            'Content': {
-                'Name': getitemdefault(data.payload, 'Name', default=None),
-                'Headers': parsed_data['headers'],
-                'Rows': parsed_data['rows']
+            "Content": {
+                "Name": getitemdefault(data.payload, "Name", default=None),
+                "Headers": parsed_data["headers"],
+                "Rows": parsed_data["rows"],
             }
         }
 
-        return RawEmbeddedExampleBuilder(context=self.context).build(
-            KeywordData('Table', raw_example_builder_payload)
-        )
+        return RawEmbeddedExampleBuilder(context=self.context).build(KeywordData("Table", raw_example_builder_payload))
 
 
 @attrs
 class URIExampleBuilder(Builder):
     def build(self, data: KeywordData):
-        raw_uri = data.payload['URI']
+        raw_uri = data.payload["URI"]
         if isinstance(raw_uri, str):
             uri = raw_uri
             request_params = {}
         else:
-            uri = raw_uri['Path']
-            raw_request_params = getitemdefault(raw_uri, 'RequestParams', default={})
+            uri = raw_uri["Path"]
+            raw_request_params = getitemdefault(raw_uri, "RequestParams", default={})
             request_params = raw_request_params or {}
 
         uri_data = get(uri, request_params).text
 
         example_builder_payload = {
-            'Name': getitemdefault(data.payload, 'Name', default=None),
-            'Content': uri_data,
+            "Name": getitemdefault(data.payload, "Name", default=None),
+            "Content": uri_data,
         }
 
-        content_meta = getitemdefault(data.payload, 'ContentMeta', default=None)
+        content_meta = getitemdefault(data.payload, "ContentMeta", default=None)
         if content_meta:
             example_builder_payload.update(ContentMeta=content_meta)
 
-        if 'ContentType' in data.payload.keys():
-            example_builder_payload.update(ContentType=data.payload['ContentType'])
+        if "ContentType" in data.payload.keys():
+            example_builder_payload.update(ContentType=data.payload["ContentType"])
 
-        return EmbeddedExampleBuilder(context=self.context).build(
-            KeywordData('Table', example_builder_payload))
+        return EmbeddedExampleBuilder(context=self.context).build(KeywordData("Table", example_builder_payload))
 
 
 @attrs
@@ -469,35 +458,32 @@ class PathExampleBuilder(Builder):
             raw_path_resolver = getitemdefault(
                 raw_path,
                 Keyword.Examples.Loader.File.Resolver.Type.TYPE,
-                default=Keyword.Examples.Loader.File.Resolver.DOCUMENT
+                default=Keyword.Examples.Loader.File.Resolver.DOCUMENT,
             )
             path_resolver = raw_path_resolver or Keyword.Examples.Loader.File.Resolver.DOCUMENT
 
         if path_resolver is Keyword.Examples.Loader.File.Resolver.CWD:
             root_path = Path.cwd()
         else:
-            root_path = Path(
-                getitemdefault(self.context, 'DocumentPath', default=Path.cwd())
-            ).parent.resolve()
+            root_path = Path(getitemdefault(self.context, "DocumentPath", default=Path.cwd())).parent.resolve()
 
         example_path = root_path / path
 
-        with example_path.open(mode='r', encoding='utf-8') as example_file:
+        with example_path.open(mode="r", encoding="utf-8") as example_file:
             example_data = example_file.read().strip()
 
         example_builder_payload = {
-            'Name': getitemdefault(data.payload, 'Name', default=None),
-            'Content': example_data,
+            "Name": getitemdefault(data.payload, "Name", default=None),
+            "Content": example_data,
         }
-        content_meta = getitemdefault(data.payload, 'ContentMeta', default=None)
+        content_meta = getitemdefault(data.payload, "ContentMeta", default=None)
         if content_meta:
             example_builder_payload.update(ContentMeta=content_meta)
 
-        if 'ContentType' in data.payload.keys():
-            example_builder_payload.update(ContentType=data.payload['ContentType'])
+        if "ContentType" in data.payload.keys():
+            example_builder_payload.update(ContentType=data.payload["ContentType"])
 
-        return EmbeddedExampleBuilder(context=self.context).build(
-            KeywordData('Table', example_builder_payload))
+        return EmbeddedExampleBuilder(context=self.context).build(KeywordData("Table", example_builder_payload))
 
 
 @attrs

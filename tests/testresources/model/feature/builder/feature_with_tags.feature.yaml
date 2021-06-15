@@ -1,7 +1,7 @@
 ---
 Feature:
   Name: Tagged Feature
-  Tag:
+  Tags:
     - Cool tag
     - Another cool tag
 ...

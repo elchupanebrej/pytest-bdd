@@ -12,15 +12,15 @@ def load_gherkin_model_by_feature_path(path: Path):
     feature_file_yaml_data = path.resolve().read_text()
     feature_file_data = list(load_all(feature_file_yaml_data, Loader=FullLoader))
 
-    gherkin_yaml_model = GherkinYamlModelBuilder(
-        context={'DocumentPath': str(path.resolve())}
-    ).build(KeywordData('Document', feature_file_data))
+    gherkin_yaml_model = GherkinYamlModelBuilder(context={"DocumentPath": str(path.resolve())}).build(
+        KeywordData("Document", feature_file_data)
+    )
 
     return gherkin_yaml_model
 
 
 def test_building_from_simple_feature_with_single_scenario(resource_path):
-    feature_file_yaml_path = (resource_path / '..' / '..' / 'feature_with_simplest_scenario.feature.yaml')
+    feature_file_yaml_path = resource_path / ".." / ".." / "feature_with_simplest_scenario.feature.yaml"
     gherkin_yaml_model = load_gherkin_model_by_feature_path(feature_file_yaml_path)
 
     scenario = gherkin_yaml_model.features[0].scenarios[0]
@@ -36,15 +36,15 @@ def test_building_from_simple_feature_with_single_scenario(resource_path):
 
 def test_building_from_simple_feature_with_single_parametrized_scenario(resource_path):
     feature_file_yaml_path = (
-        resource_path / '..' / '..' / 'feature_with_simplest_scenario_with_single_parameter.feature.yaml'
+        resource_path / ".." / ".." / "feature_with_simplest_scenario_with_single_parameter.feature.yaml"
     )
     gherkin_yaml_model = load_gherkin_model_by_feature_path(feature_file_yaml_path)
     scenario = gherkin_yaml_model.features[0].scenarios[0]
     parametrized_scenarios = list(ParametrizedScenariosBuilder()._build_from_scenario(scenario))
 
     assert len(gherkin_yaml_model.features) == 1
-    assert parametrized_scenarios[0].flow_defined_parameter_names == {'parameter'}
-    assert parametrized_scenarios[0].table_defined_parameter_names == {'parameter'}
+    assert parametrized_scenarios[0].flow_defined_parameter_names == {"parameter"}
+    assert parametrized_scenarios[0].table_defined_parameter_names == {"parameter"}
     assert parametrized_scenarios[0].flow_open_parameter_names == set()
     assert parametrized_scenarios[0].table_open_parameter_names == set()
     try:
@@ -56,7 +56,7 @@ def test_building_from_simple_feature_with_single_parametrized_scenario(resource
 
 def test_building_from_simple_feature_with_single_parametrized_scenario_with_unclosed_flow_parameter(resource_path):
     feature_file_yaml_path = (
-        resource_path / '..' / '..' / 'feature_with_simplest_scenario_with_single_unclosed_flow_parameter.feature.yaml'
+        resource_path / ".." / ".." / "feature_with_simplest_scenario_with_single_unclosed_flow_parameter.feature.yaml"
     )
     gherkin_yaml_model = load_gherkin_model_by_feature_path(feature_file_yaml_path)
 
@@ -64,9 +64,9 @@ def test_building_from_simple_feature_with_single_parametrized_scenario_with_unc
     parametrized_scenarios = list(ParametrizedScenariosBuilder()._build_from_scenario(scenario))
 
     assert len(parametrized_scenarios) == 1
-    assert parametrized_scenarios[0].flow_defined_parameter_names == {'parameter'}
+    assert parametrized_scenarios[0].flow_defined_parameter_names == {"parameter"}
     assert parametrized_scenarios[0].table_defined_parameter_names == set()
-    assert parametrized_scenarios[0].flow_open_parameter_names == {'parameter'}
+    assert parametrized_scenarios[0].flow_open_parameter_names == {"parameter"}
     assert parametrized_scenarios[0].table_open_parameter_names == set()
     with raises(ParametrizedScenario.ValidationError):
         parametrized_scenarios[0].validate_there_are_no_open_parameters()
@@ -75,7 +75,7 @@ def test_building_from_simple_feature_with_single_parametrized_scenario_with_unc
 
 def test_building_from_simple_feature_with_single_parametrized_scenario_with_unclosed_table_parameter(resource_path):
     feature_file_yaml_path = (
-        resource_path / '..' / '..' / 'feature_with_simplest_scenario_with_single_unclosed_table_parameter.feature.yaml'
+        resource_path / ".." / ".." / "feature_with_simplest_scenario_with_single_unclosed_table_parameter.feature.yaml"
     )
     gherkin_yaml_model = load_gherkin_model_by_feature_path(feature_file_yaml_path)
     scenario = gherkin_yaml_model.features[0].scenarios[0]
@@ -83,9 +83,9 @@ def test_building_from_simple_feature_with_single_parametrized_scenario_with_unc
 
     assert len(parametrized_scenarios) == 1
     assert parametrized_scenarios[0].flow_defined_parameter_names == set()
-    assert parametrized_scenarios[0].table_defined_parameter_names == {'parameter'}
+    assert parametrized_scenarios[0].table_defined_parameter_names == {"parameter"}
     assert parametrized_scenarios[0].flow_open_parameter_names == set()
-    assert parametrized_scenarios[0].table_open_parameter_names == {'parameter'}
+    assert parametrized_scenarios[0].table_open_parameter_names == {"parameter"}
     with raises(ParametrizedScenario.ValidationError):
         parametrized_scenarios[0].validate_there_are_no_open_parameters()
     # TODO Add more validations
@@ -93,7 +93,7 @@ def test_building_from_simple_feature_with_single_parametrized_scenario_with_unc
 
 def test_building_from_simple_feature_with_background_scenario_and_no_usual_scenarios(resource_path):
     feature_file_yaml_path = (
-        resource_path / '..' / '..' / 'feature_with_simplest_background_and_no_scenario.feature.yaml'
+        resource_path / ".." / ".." / "feature_with_simplest_background_and_no_scenario.feature.yaml"
     )
     gherkin_yaml_model = load_gherkin_model_by_feature_path(feature_file_yaml_path)
 
@@ -105,7 +105,7 @@ def test_building_from_simple_feature_with_background_scenario_and_no_usual_scen
 
 def test_building_from_simple_feature_with_scenario_containing_multiple_example_tables(resource_path):
     feature_file_yaml_path = (
-        resource_path / '..' / '..' / 'feature_with_scenario_with_multiple_example_tables.feature.yaml'
+        resource_path / ".." / ".." / "feature_with_scenario_with_multiple_example_tables.feature.yaml"
     )
     gherkin_yaml_model = load_gherkin_model_by_feature_path(feature_file_yaml_path)
 
@@ -114,8 +114,8 @@ def test_building_from_simple_feature_with_scenario_containing_multiple_example_
 
     assert len(parametrized_scenarios) == 2
 
-    assert parametrized_scenarios[0].flow_defined_parameter_names == {'parameter'}
-    assert parametrized_scenarios[0].table_defined_parameter_names == {'parameter'}
+    assert parametrized_scenarios[0].flow_defined_parameter_names == {"parameter"}
+    assert parametrized_scenarios[0].table_defined_parameter_names == {"parameter"}
     assert parametrized_scenarios[0].flow_open_parameter_names == set()
     assert parametrized_scenarios[0].table_open_parameter_names == set()
     try:
@@ -126,9 +126,7 @@ def test_building_from_simple_feature_with_scenario_containing_multiple_example_
 
 
 def test_building_from_simple_feature_with_backgrounded_scenario(resource_path):
-    feature_file_yaml_path = (
-        resource_path / '..' / '..' / 'feature_with_simplest_backgrounded_scenario.feature.yaml'
-    )
+    feature_file_yaml_path = resource_path / ".." / ".." / "feature_with_simplest_backgrounded_scenario.feature.yaml"
     gherkin_yaml_model = load_gherkin_model_by_feature_path(feature_file_yaml_path)
 
     parametrized_scenarios = list(ParametrizedScenariosBuilder().build(gherkin_yaml_model.features[0]))
@@ -138,8 +136,12 @@ def test_building_from_simple_feature_with_backgrounded_scenario(resource_path):
 
 
 def test_building_from_feature_with_backgrounded_scenario_with_examples_on_every_level(resource_path):
-    feature_file_yaml_path = (resource_path / '..' / '..' /
-                              'feature_with_backgrounded_scenario_with_example_tables_on_every_level.feature.yaml')
+    feature_file_yaml_path = (
+        resource_path
+        / ".."
+        / ".."
+        / "feature_with_backgrounded_scenario_with_example_tables_on_every_level.feature.yaml"
+    )
     gherkin_yaml_model = load_gherkin_model_by_feature_path(feature_file_yaml_path)
 
     parametrized_scenarios = list(ParametrizedScenariosBuilder().build(gherkin_yaml_model.features[0]))
@@ -153,8 +155,10 @@ def test_building_from_feature_with_backgrounded_scenario_with_examples_on_every
 
 def test_building_from_feature_with_backgrounded_scenario_with_examples_on_every_level_including_rules(resource_path):
     feature_file_yaml_path = (
-        resource_path / '..' / '..' /
-        'feature_with_backgrounded_scenario_with_example_tables_on_every_level_including_rules.feature.yaml'
+        resource_path
+        / ".."
+        / ".."
+        / "feature_with_backgrounded_scenario_with_example_tables_on_every_level_including_rules.feature.yaml"
     )
     gherkin_yaml_model = load_gherkin_model_by_feature_path(feature_file_yaml_path)
 

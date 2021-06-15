@@ -17,9 +17,7 @@ class ExecutablePlanBuilder:
     def build(self, source: GherkinYamlModel):
         feature_executable_plans = []
         for feature in source.features:
-            feature_executable_plans.append(
-                FeatureExecutablePlanBuilder().build(feature)
-            )
+            return feature_executable_plans.append(FeatureExecutablePlanBuilder().build(feature))
 
 
 class FeatureExecutablePlanBuilder:
@@ -49,16 +47,24 @@ class ParametrizedScenariosBuilder:
                 yield ParametrizedScenario(
                     scenario_flow=ScenarioFlow(
                         steps=[*background_scenario.scenario_flow.steps, *scenario.scenario_flow.steps],
-                        tags=[*background_scenario.scenario_flow.tags, *scenario.scenario_flow.tags, *feature_node.tags]
+                        tags=[
+                            *background_scenario.scenario_flow.tags,
+                            *scenario.scenario_flow.tags,
+                            *feature_node.tags,
+                        ],
                     ),
-                    combined_parameters_table=reduce(self._combine_parameters_tables, [
-                        background_scenario.combined_parameters_table,
-                        scenario.combined_parameters_table,
-                        CombinedParametersTable(
-                            tags=[*getattr(example_table, 'tags', []), *feature_node.tags],
-                            columns=example_table.datatable.columns
-                        ),
-                    ]))
+                    combined_parameters_table=reduce(
+                        self._combine_parameters_tables,
+                        [
+                            background_scenario.combined_parameters_table,
+                            scenario.combined_parameters_table,
+                            CombinedParametersTable(
+                                tags=[*getattr(example_table, "tags", []), *feature_node.tags],
+                                columns=example_table.datatable.columns if example_table is not None else [],
+                            ),
+                        ],
+                    ),
+                )
             except self.OverlappingTableParameterError as e:
                 # TODO log
                 continue
@@ -72,49 +78,55 @@ class ParametrizedScenariosBuilder:
         return ParametrizedScenario(
             scenario_flow=ScenarioFlow(
                 steps=[*background_scenario.scenario_flow.steps, *scenario.scenario_flow.steps],
-                tags=[*background_scenario.scenario_flow.tags, *scenario.scenario_flow.tags]
+                tags=[*background_scenario.scenario_flow.tags, *scenario.scenario_flow.tags],
             ),
-            combined_parameters_table=reduce(self._combine_parameters_tables, [
-                background_scenario.combined_parameters_table,
-                scenario.combined_parameters_table,
-                node_parameter_table
-            ]))
+            combined_parameters_table=reduce(
+                self._combine_parameters_tables,
+                [
+                    background_scenario.combined_parameters_table,
+                    scenario.combined_parameters_table,
+                    node_parameter_table,
+                ],
+            ),
+        )
 
     class OverlappingTableParameterError(RuntimeError):
         pass
 
     def _combine_parameters_tables(
-        self,
-        first_table: CombinedParametersTable,
-        second_table: CombinedParametersTable
+        self, first_table: CombinedParametersTable, second_table: CombinedParametersTable
     ) -> CombinedParametersTable:
         if first_table is None:
             return second_table
         if second_table is None:
             return first_table
 
-        first_table_rows = zip(*map(attrgetter('data'), first_table.columns))
-        first_table_headers = set(map(attrgetter('header.value'), first_table.columns))
-        second_table_rows = zip(*map(attrgetter('data'), second_table.columns))
-        second_table_headers = set(map(attrgetter('header.value'), second_table.columns))
+        first_table_rows = zip(*map(attrgetter("data"), first_table.columns))
+        first_table_headers = set(map(attrgetter("header.value"), first_table.columns))
+        second_table_rows = zip(*map(attrgetter("data"), second_table.columns))
+        second_table_headers = set(map(attrgetter("header.value"), second_table.columns))
         common_headers = first_table_headers & second_table_headers
         if common_headers:
             raise self.OverlappingTableParameterError(
-                f'Both tables contain {common_headers} headers; Unable to process'
+                f"Both tables contain {common_headers} headers; Unable to process"
             )
         combined_table_rows = map(lambda v: chain(*v), product(first_table_rows, second_table_rows))
         combined_table_data_columns = zip(*combined_table_rows)
         data_columns = []
 
-        for column_header, column_data in zip(chain(map(attrgetter('header.value'), first_table.columns),
-                                                    map(attrgetter('header.value'), second_table.columns)),
-                                              combined_table_data_columns):
-            data_columns.append(DataColumn(header=DataCell(value=column_header),
-                                           data=[*map(lambda value: DataCell(value=value), column_data)]))
-        return CombinedParametersTable(
-            columns=data_columns,
-            tags=[*first_table.tags, *second_table.tags]
-        )
+        for column_header, column_data in zip(
+            chain(
+                map(attrgetter("header.value"), first_table.columns),
+                map(attrgetter("header.value"), second_table.columns),
+            ),
+            combined_table_data_columns,
+        ):
+            data_columns.append(
+                DataColumn(
+                    header=DataCell(value=column_header), data=[*map(lambda value: DataCell(value=value), column_data)]
+                )
+            )
+        return CombinedParametersTable(columns=data_columns, tags=[*first_table.tags, *second_table.tags])
 
     def _build_from_scenario(self, source: Scenario) -> Iterable[ParametrizedScenario]:
         scenario_flow = ScenarioFlow(steps=source.steps, tags=source.tags)
@@ -122,10 +134,10 @@ class ParametrizedScenariosBuilder:
         if source.examples:
             for example_table in source.examples:
                 combined_parameters_table = CombinedParametersTable(
-                    tags=[*example_table.tags, *source.tags],
-                    columns=example_table.datatable.columns
+                    tags=[*example_table.tags, *source.tags], columns=example_table.datatable.columns
                 )
-                yield ParametrizedScenario(scenario_flow=scenario_flow,
-                                           combined_parameters_table=combined_parameters_table)
+                yield ParametrizedScenario(
+                    scenario_flow=scenario_flow, combined_parameters_table=combined_parameters_table
+                )
         else:
             yield ParametrizedScenario(scenario_flow=scenario_flow)

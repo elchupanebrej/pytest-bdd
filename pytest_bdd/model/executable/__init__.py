@@ -14,7 +14,7 @@ class Tagable:
 
 @attrs
 class ExecutablePlan:
-    feature_executable_plans = attrib(default=Factory(list), kw_only=True)   # type: List[FeatureExecutablePlan]
+    feature_executable_plans = attrib(default=Factory(list), kw_only=True)  # type: List[FeatureExecutablePlan]
 
 
 @attrs
@@ -29,7 +29,7 @@ class ParametrizedScenario:
 
     @property
     def flow_defined_parameter_names(self) -> set:
-        return set(map(attrgetter('name'), self.scenario_flow.step_parameter_set))
+        return set(map(attrgetter("name"), self.scenario_flow.step_parameter_set))
 
     @property
     def table_defined_parameter_names(self) -> set:
@@ -52,7 +52,7 @@ class ParametrizedScenario:
     def validate_there_are_no_open_parameters(self):
         still_open_parameters = self.flow_open_parameter_names | self.table_open_parameter_names
         if still_open_parameters != set():
-            raise self.ValidationError(f'There are still open parameters: {still_open_parameters}')
+            raise self.ValidationError(f"There are still open parameters: {still_open_parameters}")
 
 
 @attrs
@@ -65,7 +65,7 @@ class ScenarioFlow(Tagable):
 
     @property
     def step_parameter_set(self):
-        return set(chain(*map(attrgetter('parameters'), self.steps)))
+        return set(chain(*map(attrgetter("parameters"), self.steps)))
 
 
 @attrs
@@ -87,7 +87,7 @@ class CombinedParametersTable:
 
     @property
     def columns_header_names(self):
-        return set(map(attrgetter('header.value'), self.columns))
+        return set(map(attrgetter("header.value"), self.columns))
 
 
 @attrs
